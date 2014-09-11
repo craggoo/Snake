@@ -1,0 +1,29 @@
+
+#game { margin: 50px; }
+
+#points {
+	position: fixed;
+	top: 60px;
+	left: 70px;
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.row { display: block; }
+
+.cell {
+	display: inline-block;
+	width: 13px;
+	height: 13px;
+	border: 1px solid #cccccc;
+}
+
+.snake { background: #0000FF; }
+
+.easy { background: #F3FF00; }
+
+.medium { background: #18AF2E; }
+
+.hard { background: #FF2600; }
+
+.reset { background: #FC00FF; }
