@@ -2,7 +2,7 @@ Snake Game
 
 You use the arrow keys to move
 
-There are three different colored tiles. Red moves you 5 spaces, green moves you 3 spaces, and yellow moves you one space.
+There are three different colored tiles. Red moves you 5 spaces, green moves you 3 spaces, and yellow moves you 1 space.
 
 The speed will keep increasing as your level progresses
 
