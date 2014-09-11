@@ -1,4 +1,4 @@
-Snake Game
+Classic Snake Game
 
 You can use the arrow keys to move or the the classic gamer keys (a,s,d,w)
 
