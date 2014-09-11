@@ -1,6 +1,6 @@
 Snake Game
 
-You use the arrow keys to move
+You can use the arrow keys to move or the the classic gamer keys (a,s,d,w)
 
 There are three different colored tiles. Red moves you 5 spaces, green moves you 3 spaces, and yellow moves you one space.
 

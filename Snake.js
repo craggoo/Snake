@@ -1,4 +1,4 @@
-var snakes = []
+var snake = []
 var piecesToEat = []
 var direction = []
 var score = []
@@ -8,19 +8,6 @@ var intervals = []
 var tracker = []
 var keep = []
 var current_speed = []
-
-function reset() {
-	snakes.splice(0, snakes.length)
-	piecesToEat.splice(0, piecesToEat.length)
-	direction.splice(0, direction.length)
-	score.splice(0,score.length)
-	for (var i=0;i<intervals.length;i++) {
-		clearInterval(i)	
-	}
-	intervals.splice(0,intervals.length)	
-	$('#game').remove()
-}
-
 
 function display() { // display score
 	var sf = $('#craggoo').html(score)
@@ -35,15 +22,112 @@ function tracking(array) {
 	else if (array[0] >= 1 && array[0] <= 20) {
 		sd = $('#bbv').html('Level 2')
 	}
-	else if (array[0] >= 20 && array[0] <=60) {
+	else if (array[0] >= 21 && array[0] <=60) {
 		sd = $('#bbv').html('Level 3')
 	}
-	else if (array[0] >= 61 && array[0] <=100) {
+	else {
 		sd = $('#bbv').html('Level 4')
 	}
-	else {
-	}
+
 	return sd
+}
+
+function clearIntervals(array) {
+	for (var i=0;i<array.length;i++) {
+		window.clearInterval(i)
+	}
+}
+
+function repeating(f, speed) { // function to use to setup a repeating interval
+	intervals.push(setInterval(f, speed))
+	
+	if (current_speed.length == 0) {
+		current_speed.push(speed)
+	}
+}
+
+function moveSnake() { // value to use to move snake
+	return move(direction,snake, piecesToEat)	
+}
+
+function eatItem() { // determines how the snake grows
+	return eating(snake,foods, foodValue, score)
+}
+
+function endGame(array) { // determine end game conditions
+	y = array[array.length-1][1]
+	x = array[array.length-1][0]
+	if (  (y < 0) || (y >= $('#y').val() ) || (x < 0) || (x >= $('#x').val() ) ) {
+		clearIntervals(intervals)
+		alert("Game Over")
+	}
+	if (array.length <1) {
+		return false
+	}
+	var temp = []
+	var value = array[array.length-1]
+	for (var i=0;i<array.length-1;i++) {
+		if ( (array[i][0] == value[0]) && (array[i][1] == value[1]) ) {
+			temp.push(i)
+			break
+		}
+	}
+
+	if (temp.length > 0) {
+		clearIntervals(intervals)
+		alert("Game Over")
+	}
+
+	temp.splice(0,temp.length)
+}
+
+function changeDir(array, dir) { // changes direction if its a valid direction 
+	if (checkDirection(array,dir) == 0) {
+		return false
+	}
+	else {
+		checkDirection(array,dir)
+	}	
+}
+
+function checkDirection(dire,input) { // converts key input to a direction
+	temp = []
+	var arr = []
+	if (input == 40 || input == 83) {
+		temp = 'down'
+	}
+	else if (input == 39 || input == 68) {
+		temp = 'right'
+	}
+	else if (input == 38 || input == 87) {
+		temp = 'up'
+	}
+	else if (input == 37 || input == 65) {
+		temp = 'left'
+	}
+	else {
+		return false
+	}
+	
+	var detect = function (array) { // determines if the direction is valid
+		arr.push(direction[0],temp)
+
+		if ( ( (arr[0] == 'down' || arr[0] == 'up') &&  (arr[1] == 'down' || arr[1] == 'up' ) && array.length>=2 ) ) {
+			dire.splice(0,dire.length,arr[0])
+			return 0
+		}
+
+		else if ( ( (arr[0] == 'left' || arr[0] == 'right') &&  (arr[1] == 'left' || arr[1] == 'right' ) && array.length >=2 ) ) {
+			dire.splice(0,dire.length,arr[0])
+			return 0
+		}
+
+		else {
+			dire.splice(0,dire.length,arr[arr.length-1])
+			return 1
+		}
+	}
+	return detect(snake)
 }
 
 function createGrid() { // create initial grid
@@ -193,54 +277,6 @@ function move(dir, array, item) {
 		}				
 }
 
-function endGame(array) { // determine end game conditions
-	y = array[array.length-1][1]
-	x = array[array.length-1][0]
-	if (  (y < 0) || (y >= $('#y').val() ) || (x < 0) || (x >= $('#x').val() ) ) {
-		for (var i=0;i<intervals.length;i++) {
-			window.clearInterval(i)
-		}
-		alert("Game Over")
-	}
-	if (array.length <1) {
-		return false
-	}
-	var temp = []
-	var value = array[array.length-1]
-	for (var i=0;i<array.length-1;i++) {
-		if ( (array[i][0] == value[0]) && (array[i][1] == value[1]) ) {
-			temp.push(i)
-			break
-		}
-	}
-
-	if (temp.length > 0) {
-		for (var i=0;i<intervals.length;i++) {
-			window.clearInterval(i)
-		}
-		alert("Game Over")
-	}
-
-	temp.splice(0,temp.length)
-}
-
-function clearIntervals(array) {
-	for (var i=0;i<array.length;i++) {
-		window.clearInterval(i)
-	}
-}
-
-function moveSnake() { // value to use to move snake
-	return move(direction,snakes, piecesToEat)	
-}
-
-function repeating(f, speed) { // function to use to setup a repeating interval
-
-	intervals.push(setInterval(f, speed))
-	if (current_speed.length == 0) {
-		current_speed.push(speed)
-	}
-}
 
 function snaking(array,action, arrayz) { // changes the location of the snake
 	var element = document.getElementById(array[0][0] + "-" + array[0][1])
@@ -259,9 +295,7 @@ function snaking(array,action, arrayz) { // changes the location of the snake
 	arrayz.splice(0,1)
 } 
 
-function eatItem() { // determines how the snake grows
-	return eating(snakes,foods, foodValue, score)
-}
+
 
 function eating(pos, array, value, total) { // determines how many tiles the snake grows
 
@@ -312,7 +346,7 @@ function eating(pos, array, value, total) { // determines how many tiles the sna
 		}
 	}
 
-	tempStorage(snakes, sum, direction, piecesToEat) 
+	tempStorage(snake, sum, direction, piecesToEat) 
 
 	var track = $('#craggoo').html()
 
@@ -348,61 +382,12 @@ function eating(pos, array, value, total) { // determines how many tiles the sna
 	}
 }
 
-function changeDir(array, dir) { // changes direction if its a valid direction 
-	if (checkDirection(array,dir) == 0) {
-		return false
-	}
-	else {
-		checkDirection(array,dir)
-	}	
-}
-
-function checkDirection(dire,input) { // converts key input to a direction
-	temp = []
-	var arr = []
-	if (input == 40) {
-		temp = 'down'
-	}
-	else if (input == 39) {
-		temp = 'right'
-	}
-	else if (input == 38) {
-		temp = 'up'
-	}
-	else if (input == 37) {
-		temp = 'left'
-	}
-	else {
-		return false
-	}
-	
-	var detect = function () { // determines if the direction is valid
-		arr.push(direction[0],temp)
-
-		if ( ( (arr[0] == 'down' || arr[0] == 'up') &&  (arr[1] == 'down' || arr[1] == 'up' ) ) ) {
-			dire.splice(0,dire.length,arr[0])
-			return 0
-		}
-
-		else if ( ( (arr[0] == 'left' || arr[0] == 'right') &&  (arr[1] == 'left' || arr[1] == 'right' ) ) ) {
-			dire.splice(0,dire.length,arr[0])
-			return 0
-		}
-
-		else {
-			dire.splice(0,dire.length,arr[arr.length-1])
-			return 1
-		}
-	}
-	return detect()
-}
-
 $(document).ready(function() { 
 	$(document).keydown(function(event) {
 		changeDir(direction, event.which) // starts listening for keystrokes
 	})
 	$('#play').click(function() { // creates initial game conditions and starts moving the snake
-		createGrid(), initialPosition(snakes), initialDir(direction), placeItems(), 
+		createGrid(), initialPosition(snake), initialDir(direction), placeItems(), 
 		repeating(moveSnake, 1000), repeating(eatItem, 1000), repeating(display, 1500)		
 	})
 })
