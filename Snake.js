@@ -14,7 +14,7 @@ function display() { // display score
 	return sf
 }
 
-function tracking(array) {
+function tracking(array) { // display current level
 	var sd;
 	if (array.length == 0) {
 		sd = $('#bbv').html('Level 1')
@@ -32,7 +32,7 @@ function tracking(array) {
 	return sd
 }
 
-function clearIntervals(array) {
+function clearIntervals(array) { // clear Intervals when changing speeds
 	for (var i=0;i<array.length;i++) {
 		window.clearInterval(i)
 	}
@@ -57,7 +57,7 @@ function eatItem() { // determines how the snake grows
 function endGame(array) { // determine end game conditions
 	y = array[array.length-1][1]
 	x = array[array.length-1][0]
-	if (  (y < 0) || (y >= $('#y').val() ) || (x < 0) || (x >= $('#x').val() ) ) {
+	if (  (y < 0) || (y >= $('#y').val() ) || (x < 0) || (x >= $('#x').val() ) ) { // check if snake hits the edge of the grid
 		clearIntervals(intervals)
 		alert("Game Over")
 	}
@@ -66,8 +66,8 @@ function endGame(array) { // determine end game conditions
 	}
 	var temp = []
 	var value = array[array.length-1]
-	for (var i=0;i<array.length-1;i++) {
-		if ( (array[i][0] == value[0]) && (array[i][1] == value[1]) ) {
+	for (var i=0;i<array.length-1;i++) { // check if snake collides with itself
+		if ( (array[i][0] == value[0]) && (array[i][1] == value[1]) ) { 
 			temp.push(i)
 			break
 		}
@@ -221,14 +221,14 @@ function move(dir, array, item) {
 	var spliced = array.splice(0,1)
 	var pusher = [spliced[0][0], spliced[0][1]]
 		
-		if (dir == 'left') {
+		if (dir == 'left') { // determine how to move snake. 
 			
-			if (amount > 0) {
+			if (amount > 0) { // if there are pieces to eat do this
 				array.unshift(pusher)
 				array.push(item.shift())
 			}
 			
-			else {
+			else { // if there are no pieces to eat do this
 				array.push([X-1, Y])
 			}
 				
@@ -352,7 +352,7 @@ function eating(pos, array, value, total) { // determines how many tiles the sna
 
 	var speed = current_speed[0]
 
-	function changeSpeed(itemz, trackerS, speed) { // changes the game speed
+	function changeSpeed(itemz, trackerS, speed) { // changes the game speed 
 		if (keep.length == 0) {
 			trackerS.push(total[0])
 		}
@@ -391,4 +391,5 @@ $(document).ready(function() {
 		repeating(moveSnake, 1000), repeating(eatItem, 1000), repeating(display, 1500)		
 	})
 })
+
 
